@@ -6,18 +6,18 @@
         <img src="../assets/logo.png" alt="">
       </div>
       <!--表单验证-->
-      <el-form class="user" ref="ruleForm" :rules="loginFormRules" :model="loginForm">
-        <el-form-item prop="username">
+      <el-form label-width="20px" :model="ruleForm" :rules="rules" ref="ruleForm" class="user">
+        <el-form-item label=" "  prop="username">
           <el-input
             placeholder="请输入账号"
             prefix-icon="iconfont icon-icon-test1"
-            v-model="loginForm.username">
+            v-model="ruleForm.username">
             <!--prop="name"需要匹配的名称-->
           </el-input>
         </el-form-item>
-        <el-form-item prop="password">
+        <el-form-item label=" " prop="password">
           <el-input
-            v-model="loginForm.password"
+            v-model="ruleForm.password"
             placeholder="请输入密码"
             prefix-icon="iconfont icon-icon-test">
           </el-input>
@@ -27,22 +27,20 @@
           <el-button type="info" @click="resetForm">重置</el-button>
         </div>
       </el-form>
-
     </div>
   </div>
 </template>
 
 <script>
-import { passlogin } from '../api/index'
 export default {
   data () {
     return {
-      loginForm: {
+      ruleForm: {
         username: 'admin',
         password: '123456'
       },
       // 这个表单验证规则对象
-      loginFormRules: {
+      rules: {
         username: [
           { required: true, message: '请输入账号长度在 3 到 10 个字符', trigger: 'blur' },
           { min: 3, max: 10, message: '请输入账号长度在 3 到 10 个字符', trigger: 'blur' }
@@ -59,11 +57,11 @@ export default {
         if (valid) {
           // console.log(valid) // 成功为true
           const user = {
-            username: this.loginForm.username,
-            password: this.loginForm.password
+            username: this.ruleForm.username,
+            password: this.ruleForm.password
           }
-          // console.log(user)
-          const res = await passlogin(user)
+          // 登录请求
+          const res = await this.$http.passlogin(user)
           if (res.meta.status !== 200) {
             this.$message.error('账号不存在')
           } else {

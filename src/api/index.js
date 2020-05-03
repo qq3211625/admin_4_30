@@ -1,18 +1,23 @@
-// 定义 请求的  函数数据体
 /*
 包含n个接口请求函数的模块
-调用ajax函数发请求
 函数的返回值是promise
  */
 import ajax from './ajax'
 const BASE = 'http://127.0.0.1:8888/api/private/v1'
-// 请求登录
-export const passlogin = ({username, password}) => ajax(BASE + '/login', {username, password}, 'POST')
-// 获取食品分类列表
-// export const reqCategory = () => ajax(BASE + '/index_category')
-// const BASE = '/api'
-// 根据经纬度获取位置详情
-// export const reqAddress = (latitude, longitude) => ajax(BASE + `/position/${latitude},${longitude}`)
-// 发送短信验证码 http://localhost:5000/sendcode?phone=13716962779
-// export const securitycode = ({phone: phone}) => ajax(BASE + '/sendcode', {phone:phone})
-// ### POST 请求URL：http://localhost:5000/login_pwd
+
+export default {
+  // 请求登录
+  passlogin: ({username, password}) => ajax(BASE + '/login', {username, password}, 'POST'),
+  // 左侧分类列表
+  getMenu: () => ajax(BASE + '/menus'),
+  //  请求用户列表数据
+  getUserList: ({pagenum, pagesize, query}) => ajax(BASE + '/users', {pagenum, pagesize, query}),
+  //  修改 switch 用户状态
+  userSwitch: ({id, state}) => ajax(BASE + `/users/${id}/state/${state}`, {}, 'PUT'),
+  // 添加用户数据
+  addUsers: ({Email, username, password}) => ajax(BASE + '/users', {Email, username, password}, 'POST'),
+  // 删除用户数据
+  delete: ({id}) => { return ajax(BASE + `/users/${id}`, {}, 'DELETE') }
+  // --------------
+  // 上面都是简写形式 ruq: () => { return ajax() }
+}

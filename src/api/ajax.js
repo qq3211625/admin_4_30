@@ -7,6 +7,12 @@
     2. 异步返回的不是reponse, 而直接是response.data
  */
 import axios from 'axios'
+// 请求头拦截去
+axios.interceptors.request.use((config) => {
+  config.headers['Authorization'] = window.sessionStorage.getItem('token')
+  // 必须return config
+  return config
+})
 
 export default function ajax (url, data = {}, method = 'GET') {
   return new Promise((resolve, reject) => {
@@ -14,6 +20,10 @@ export default function ajax (url, data = {}, method = 'GET') {
     // 执行异步ajax请求
     if (method === 'GET') {
       promise = axios.get(url, {params: data}) // params配置, 指定的是query参数
+    } else if (method === 'PUT') {
+      promise = axios.put(url, {params: data}) // params配置, 指定的是query参数
+    } else if (method === 'DELETE') {
+      promise = axios.delete(url, {params: data}) // params配置, 指定的是query参数
     } else {
       promise = axios.post(url, data)
     }
@@ -25,7 +35,7 @@ export default function ajax (url, data = {}, method = 'GET') {
         //   console.log(token)
         //   axios.defaults.headers.common['Authorization'] = token //设置请求头
         // }
-        resolve(response.data)
+        resolve(response.data) // data里面没有状态码
       },
       error => { // 如果失败了, 不调用reject(), 而是提示错误信息
         alert('请求异常: ' + error.message)

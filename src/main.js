@@ -6,6 +6,9 @@ import router from './router'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 import '../static/font/iconfont.css'
+import '../static/fonts-home/iconfont.css'
+import req from './api/index'
+Vue.prototype.$http = req
 
 router.beforeEach((to, from, next) => { // 每次路由跳转都会执行的回调
   if (to.path === '/login') { // 去登录页面直接放行
