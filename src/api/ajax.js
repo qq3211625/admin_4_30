@@ -21,7 +21,7 @@ export default function ajax (url, data = {}, method = 'GET') {
     if (method === 'GET') {
       promise = axios.get(url, {params: data}) // params配置, 指定的是query参数
     } else if (method === 'PUT') {
-      promise = axios.put(url, {params: data}) // params配置, 指定的是query参数
+      promise = axios.put(url, data) // put不需要params 参数的
     } else if (method === 'DELETE') {
       promise = axios.delete(url, {params: data}) // params配置, 指定的是query参数
     } else {
@@ -30,11 +30,6 @@ export default function ajax (url, data = {}, method = 'GET') {
 
     promise.then(
       response => { // 如果成功了,调用resolve ()
-        // if (response.data.meta.status === 200) {
-        //   const token = response.data.data.token
-        //   console.log(token)
-        //   axios.defaults.headers.common['Authorization'] = token //设置请求头
-        // }
         resolve(response.data) // data里面没有状态码
       },
       error => { // 如果失败了, 不调用reject(), 而是提示错误信息

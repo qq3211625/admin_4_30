@@ -125,7 +125,7 @@ export default {
   .home-container{
     width 100%
     height 100%
-    min-width 1024px
+    min-width 1124px
   }
     .el-header {
       background-color: #373d41;

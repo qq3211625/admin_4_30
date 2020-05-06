@@ -3,7 +3,7 @@
     <div class="shop">
       <!--logo-->
       <div class="logo">
-        <img src="../assets/logo.png" alt="">
+        <img src="../../assets/logo.png" alt="">
       </div>
       <!--表单验证-->
       <el-form label-width="20px" :model="ruleForm" :rules="rules" ref="ruleForm" class="user">

@@ -35,29 +35,29 @@
           <el-table-column label="状态" prop="" >
             <!-- 作用域插槽 -->
             <template slot-scope="scope">
-              {{scope.row.mg_state}}
-              <!-- 加入组件开关 -->
-              <el-switch
-                @change="userSwitch(scope.row)"
-                v-model="scope.row.mg_state"
-                active-color="#13ce66"
-                inactive-color="#ff4949">
-              </el-switch>
-            </template>
+            {{scope.row.mg_state}}
+            <!-- 加入组件开关 -->
+            <el-switch
+              @change="userSwitch(scope.row)"
+              v-model="scope.row.mg_state"
+              active-color="#13ce66"
+              inactive-color="#ff4949">
+            </el-switch>
+          </template>
           </el-table-column>
           <el-table-column label="操作" width="181px">
             <!-- 作用域插槽 scope当前一横的所有数据 -->
             <template slot-scope="scope">
-              <!-- 修改按钮 -->
-              <el-button size="mini" type="primary" icon="el-icon-edit"></el-button>
-              <!-- 删除按钮 -->
-              <el-button size="mini" type="danger" @click="open(scope.row.id)" icon="el-icon-delete"></el-button>
-              <!-- 提示信息分配角色 -->
-              <el-tooltip class="item" effect="dark" content="分配角色" :enterable="false" placement="top">
-                <!-- 分配角色按钮 -->
-                <el-button size="mini" type="warning" icon="el-icon-setting">
-                </el-button>
-              </el-tooltip>
+                <!-- 修改按钮 -->
+                <el-button size="mini" type="primary" icon="el-icon-edit"></el-button>
+                <!-- 删除按钮 -->
+                <el-button size="mini" type="danger" @click="open(scope.row.id)" icon="el-icon-delete"></el-button>
+                <!-- 提示信息分配角色 -->
+                <el-tooltip class="item" effect="dark" content="分配角色" :enterable="false" placement="top">
+                    <!-- 分配角色按钮 -->
+                    <el-button size="mini" type="warning" icon="el-icon-setting" @click="setRole(scope.row)">
+                    </el-button>
+                </el-tooltip>
             </template>
           </el-table-column>
         </el-table>
@@ -93,6 +93,33 @@
             <el-button @click="submitOff">取 消</el-button>
             <el-button type="primary" @click="submit">确 定</el-button>
           </span>
+        </el-dialog>
+        <!-- 添加分配权限 对话框 只是一个全局的弹窗-->
+        <el-dialog
+          title="分配权限"
+          :visible.sync="dialogVisibleRoles"
+          width="50%">
+          <!-- 分配权限主体树状图 -->
+          <div class="userSet">
+            <p>当前用户: {{userinfo.usernamer}}</p>
+            <p>当前角色: {{userinfo.role_name}}</p>
+            <div style="display: flex" >
+              <p style="margin-right: 15px">分配角色</p>
+              <el-select v-model="value" placeholder="请选择">
+                <el-option
+                  v-for="item in options"
+                  :key="item.id"
+                  :label="item.roleName"
+                  :value="item.id">
+                </el-option>
+              </el-select>
+            </div>
+          </div>
+          <!-- 这是按钮区域 -->
+          <span slot="footer" class="dialog-footer">
+            <el-button @click="dialogVisibleRoles = false">取 消</el-button>
+            <el-button type="primary" @click="saverRoleInfo">确 定</el-button>
+        </span>
         </el-dialog>
       </div>
     </el-card>
@@ -150,8 +177,27 @@ export default {
         f: ' 1518 ',
         g: '弄'
       }],
-      dialogVisible: false // 添加用户对话框显示隐藏
-
+      dialogVisible: false, // 添加用户对话框显示隐藏
+      dialogVisibleRoles: false, // 添加分配权限对话框显示隐藏
+      userinfo: {}, // 需要被分配角色用户信息
+      // 模拟数据
+      options: [{
+        value: '选项1',
+        label: '黄金糕'
+      }, {
+        value: '选项2',
+        label: '双皮奶'
+      }, {
+        value: '选项3',
+        label: '蚵仔煎'
+      }, {
+        value: '选项4',
+        label: '龙须面'
+      }, {
+        value: '选项5',
+        label: '北京烤鸭'
+      }],
+      value: '' // 分配的角色id
     }
   },
   computed: {},
@@ -255,6 +301,38 @@ export default {
           message: '已取消删除'
         })
       })
+    },
+    // 展示分配列表
+    async setRole (userinfo) {
+      this.userinfo = userinfo
+      // console.log('111', this.userinfo)
+      this.dialogVisibleRoles = true
+      const res = await this.$http.getRolesList()
+      if (res.meta.status !== 200) {
+        this.$message.error(res.meta.msg)
+      } else {
+        this.options = res.data
+        console.log(this.options)
+      }
+    },
+    // 点击按钮分配角色
+    async saverRoleInfo () {
+      if (!this.value) {
+        return
+      }
+      const req = {
+        id: this.userinfo.id,
+        rid: this.value
+      }
+      console.log(req)
+      const res = await this.$http.allotRole(req)
+      if (res.meta.status !== 200) {
+        this.$message.error(res.meta.msg)
+      } else {
+        this.$message.success('设置成功')
+        this.getUserList()
+        this.dialogVisibleRoles = false
+      }
     }
   },
   created () {
@@ -276,11 +354,13 @@ export default {
     margin-top: 15px;
     font-size: 12px;
   }
-  .el-breadcrumb{
-    margin-bottom: 15px;
-    font-size: 12px;
-  }
+
   .el-pagination{
     margin-top: 15px;
+  }
+  .userSet{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
   }
 </style>

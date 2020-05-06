@@ -1,7 +1,9 @@
-import Login from '../components/Login'
+import Login from '../components/user/Login'
 import Home from '../pages/Home/Home'
-import Welcome from '../components/Welcome'
-import Users from '../components/Users'
+import Welcome from '../components/user/Welcome'
+import Users from '../components/user/Users'
+import Rights from '../components/power/Rights'
+import Roles from '../components/power/Roles'
 
 export default [
   {
@@ -12,6 +14,14 @@ export default [
     path: '/home',
     component: Home,
     children: [
+      {
+        path: '/roles',
+        component: Roles
+      },
+      {
+        path: '/rights',
+        component: Rights
+      },
       {
         path: '/welcome',
         component: Welcome
