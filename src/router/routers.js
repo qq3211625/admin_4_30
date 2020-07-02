@@ -1,9 +1,11 @@
 import Login from '../components/user/Login'
+import Test from '../components/user/Test'
 import Home from '../pages/Home/Home'
 import Welcome from '../components/user/Welcome'
 import Users from '../components/user/Users'
 import Rights from '../components/power/Rights'
 import Roles from '../components/power/Roles'
+import Cate from '../components/goods/Cate'
 
 export default [
   {
@@ -11,9 +13,22 @@ export default [
     component: Login
   },
   {
+    path: '/test',
+    component: Test
+  },
+  {
     path: '/home',
     component: Home,
     children: [
+      {
+        // 自动跳转路由
+        path: '/home',
+        redirect: '/welcome'
+      },
+      {
+        path: '/welcome',
+        component: Welcome
+      },
       {
         path: '/roles',
         component: Roles
@@ -23,17 +38,12 @@ export default [
         component: Rights
       },
       {
-        path: '/welcome',
-        component: Welcome
-      },
-      {
         path: '/users',
         component: Users
       },
       {
-        // 自动跳转路由
-        path: '/home',
-        redirect: '/welcome'
+        path: '/categories',
+        component: Cate
       }
     ]
   },

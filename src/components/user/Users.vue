@@ -230,7 +230,7 @@ export default {
     },
     // 监听switch状态的改变
     async userSwitch (userInfo) {
-      // console.log(userInfo)
+      console.log(userInfo)
       const req = {
         id: userInfo.id,
         state: userInfo.mg_state
